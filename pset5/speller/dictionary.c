@@ -33,18 +33,16 @@ bool check(const char *word)
 unsigned int hash(const char *word)
 {
     // TODO
-    float hashInd = 0.0, sum = 0.0;
-    int j = 0, len = str.length();
-
-    for (j = 0; j < len; j++)
+    const int p = 31;
+    const int mod = 1e9 + 9;
+    long long hashValue = 0;
+    long long p_pow = 1;
+    for (char c : word)
     {
-        sum += (int)str[j];
-        hashInd += (float)((int)str[j]) * polynomialIndex[j];
+        hashValue = (hashValue + (c - 'a' + 1) * p_pow) % mod;
+        p_pow = (p_pow * p) % mod;
     }
-
-    int indexOfKey = (((int)fmodf(hashInd, sum) * len) % (int)table);
-
-    return 0;
+    return hashValue;
 }
 
 // Loads dictionary into memory, returning true if successful else false
@@ -60,39 +58,44 @@ bool load(const char *dictionary)
     // allocate enough memory for even the longest word
     char *wordBuffer = malloc(sizeof(LENGTH + 1));
 
-    // load words into buffer, create node, hash them, place into table at correct index
-    while (fscanf(dictPtr, "%s", wordBuffer) == 1)
+    if (wordBuffer != NULL)
+    {
+        // load words into buffer, create node, hash them, place into table at correct index
+        while (fscanf(dictPtr, "%s", wordBuffer) == 1)
+        {
+
+            // for each of those words, create a new node
+            // malloc heap memory
+            node *n = malloc(sizeof(node));
+            if (n == NULL)
+            {
+                return 1;
+            }
+
+            // strcpy word into the node from buffer?
+            strcpy(n->word, wordBuffer);
+
+            // set the node pointer to NULL
+            n->next = NULL;
+
+            // you're going to hash the word to obtain a hash (INDEX) value to tell you where it goes
+            unsigned int loc = hash(n->word);
+
+            // take each of nodes and insert them at the correct index
+            // go to the head of a list starting at that index
+            // have a tmp variable point to where the bucket is pointing
+            // point the list to the new node
+            // point the new node to tmp
+
+            printf("%i\n", loc);
+        }
+        return true;
+    }
+    else
     {
 
-        // for each of those words, create a new node
-        // malloc heap memory
-        node *n = malloc(sizeof(node));
-
-        if (n == NULL)
-        {
-            return 1;
-        }
-
-        // strcpy word into the node from buffer?
-        strcpy(n->word, wordBuffer);
-
-        // set the node pointer to NULL
-        n->next = NULL;
-
-        // you're going to hash the word to obtain a hash value to tell you where it goes
-        unsigned int loc = hash(n->word);
-
-        printf("%i\n", loc);
+        return false;
     }
-    return true;
-    // take each of those words (nodes) and insert them at the correct bucket
-    // index into the hash table
-    // go to the head of a list starting at that index
-    // have a tmp variable point to where the bucket is pointing
-    // point the list to the new node
-    // point the new node to tmp
-    //
-    return false;
 }
 
 // Returns number of words in dictionary if loaded else 0 if not yet loaded
