@@ -32,26 +32,18 @@ bool check(const char *word)
 // Hashes word to a number
 unsigned int hash(const char *word)
 {
-    // TODO
     const int p = 31;
     const int mod = 1e9 + 9;
     long long hashValue = 0;
     long long p_pow = 1;
-    for (char c : word) // redo this line in C, I think this is Python
+    for (char c : word) // redo this line
+    // in C use strlen in the condition?
     {
         hashValue = (hashValue + (c - 'a' + 1) * p_pow) % mod;
         p_pow = (p_pow * p) % mod;
     }
     return hashValue;
 }
-
-// USE THIS CODE TO LOOP OVER EACH CHAR IN THE WORD
-// char mystring[] = "My String";
-// int size = strlen(mystring);
-// int i;
-// for(i = 0; i < size; i++) {
-//     char c = mystring[i];
-// }
 
 // Loads dictionary into memory, returning true if successful else false
 bool load(const char *dictionary)
