@@ -81,6 +81,7 @@ bool load(const char *dictionary)
     // have a tmp variable point to where the bucket is pointing
     // point the list to the new node
     // point the new node to tmp
+    //
     return false;
 }
 
