@@ -33,6 +33,16 @@ bool check(const char *word)
 unsigned int hash(const char *word)
 {
     // TODO
+    float hashInd = 0.0, sum = 0.0;
+    int j = 0, len = str.length();
+
+    for (j = 0; j < len; j++)
+    {
+        sum += (int)str[j];
+        hashInd += (float)((int)str[j]) * polynomialIndex[j];
+    }
+
+    int indexOfKey = (((int)fmodf(hashInd, sum) * len) % (int)table);
 
     return 0;
 }
