@@ -29,19 +29,25 @@ int loadCount = 0;
 // Returns true if word is in dictionary else false
 bool check(const char *word)
 {
+    // hash the word from the text
     unsigned int index = hash(word);
 
+    // determine if the index is within range of our table.
     if (index < N && index >= 0)
     {
+        // create a temporary node pointer to point to that index
         node *tmp = table[index];
 
+        // while the pointer is not null
         while (tmp != NULL)
         {
+            // compare strings from each node with the word from the text
             if (strcasecmp(tmp->word, word) == 0)
             {
+                // if match, return true.
                 return true;
             }
-
+            // else keep going!
             tmp = tmp->next;
         }
 
