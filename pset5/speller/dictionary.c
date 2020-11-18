@@ -119,7 +119,6 @@ bool load(const char *dictionary)
                     table[index] = n;
                     // set the pointer of n to be NULL since its the last item on the list
                     n->next = NULL;
-                    printf("new node\n");
                     loadCount++;
                 }
                 // the list already exists
@@ -131,7 +130,6 @@ bool load(const char *dictionary)
                     n->next = tmp;
                     // set the head of the list to point to the new node, n.
                     table[index] = n;
-                    printf("added node\n");
                     loadCount++;
                 }
             }
