@@ -55,7 +55,7 @@ for dna in dnaNameList:
 
 fields = len(dnaDB.fieldnames) - 1
 
-# search the dnaDB dict for a match between results list and entries in the dict.
+# search the dnaDB for a match between results list and entries in the dict.
 for person in dnaDB:
     matchCount = 0
     for i in range(fields):
