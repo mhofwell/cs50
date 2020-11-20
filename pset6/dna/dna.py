@@ -4,93 +4,67 @@ import csv
 from utils import sanitize
 from sys import argv, exit
 
-countStrand1 = 0
-countStrand2 = 0
-countStrand3 = 0
-countStrand4 = 0
-countStrand5 = 0
-countStrand6 = 0
-countStrand7 = 0
-countStrand8 = 0
+argVector = argv
 
+# ensure proper input format
+sanitize(argVector)
 
-def main():
+# open the dictionary file
+dbFile = open(argv[1], "r")
+if dbFile == None:
+    exit(1)
 
-    # sanitize command line input
-    sanitize(argv)
+# initialize the dictionary file as a dictReader
+dnaDB = csv.DictReader(dbFile)
 
-    # open CSV and read contents into memory
-    # get the filename or the database
-    dnaData = argv[1]
+# open the testfile
+testFileName = open(argv[2], "r")
+if testFileName == None:
+    exit(1)
 
-    # get the file to test against the DB
-    testFile = argv[2]
+# read the testfile into a variable
+testFile = testFileName.read()
+testFileName.close()
 
-    # open DNA sequence and read its contents into memory
-    database = open(dnaData, "r")
-    dnaDB = csv.DictReader(database)
+# initialize an array of fieldnames
+dnaNameList = []
+i = 1
 
-    # load testfile data into dict in memory
-    with open(testFile, "r") as testFile:
-        memTestFile = testFile.read()
+# get all the fieldnames
+while i < len(dnaDB.fieldnames):
+    dnaNameList.append(dnaDB.fieldnames[i])
+    i += 1
 
+# initialize a results array to hold the count of each
+# DNA fieldname
+results = []
+
+# iterate through the sample DNA with each fieldname
+for dna in dnaNameList:
+    count = re.findall(r'(?:'+dna+')+', testFile)
+    if count:
+        maxSequence = max(count, key=len)
+        patternLength = int(len(maxSequence) / len(dna))
+        # put the result into a separate array
+        if patternLength > 0:
+            results.append(patternLength)
+    # if a sequence doesn't exist, exit and declare no match.
+    else:
+        print('No match.')
+        exit(2)
+
+fields = len(dnaDB.fieldnames) - 1
+
+# search the dnaDB dict for a match between results list and entries in the dict.
+for person in dnaDB:
     matchCount = 0
+    for i in range(fields):
+        if int(person[dnaNameList[i]]) == int(results[i]):
+            matchCount += 1
+        if matchCount == fields:
+            print(person['name'])
+            dbFile.close()
+            exit(0)
 
-    dnaStrand1 = dnaDB.fieldnames[1]
-    dnaStrand2 = dnaDB.fieldnames[2]
-    dnaStrand3 = dnaDB.fieldnames[3]
-    dnaStrand4 = dnaDB.fieldnames[4]
-    dnaStrand5 = dnaDB.fieldnames[5]
-    dnaStrand6 = dnaDB.fieldnames[6]
-    dnaStrand7 = dnaDB.fieldnames[7]
-    dnaStrand8 = dnaDB.fieldnames[8]
-
-    countStrand1 = re.findall(r'(?:'+dnaStrand1+')+', memTestFile)
-    if countStrand1:
-        maxSequence = max(countStrand1, key=len)
-        countStrand1 = (len(maxSequence)//len(dnaStrand1))
-
-    countStrand2 = re.findall(r'(?:'+dnaStrand2+')+', memTestFile)
-    if countStrand2:
-        maxSequence = max(countStrand2, key=len)
-        countStrand2 = (len(maxSequence)//len(dnaStrand2))
-
-    countStrand3 = re.findall(r'(?:'+dnaStrand3+')+', memTestFile)
-    if countStrand3:
-        maxSequence = max(countStrand3, key=len)
-        countStrand3 = (len(maxSequence)//len(dnaStrand3))
-
-    countStrand4 = re.findall(r'(?:'+dnaStrand4+')+', memTestFile)
-    if countStrand4:
-        maxSequence = max(countStrand4, key=len)
-        countStrand4 = (len(maxSequence)//len(dnaStrand4))
-
-    countStrand5 = re.findall(r'(?:'+dnaStrand5+')+', memTestFile)
-    if countStrand5:
-        maxSequence = max(countStrand5, key=len)
-        countStrand5 = (len(maxSequence)//len(dnaStrand5))
-
-    countStrand6 = re.findall(r'(?:'+dnaStrand6+')+', memTestFile)
-    if countStrand6:
-        maxSequence = max(countStrand6, key=len)
-        countStrand6 = (len(maxSequence)//len(dnaStrand6))
-
-    countStrand7 = re.findall(r'(?:'+dnaStrand7+')+', memTestFile)
-    if countStrand7:
-        maxSequence = max(countStrand7, key=len)
-        countStrand7 = (len(maxSequence)//len(dnaStrand7))
-
-    countStrand8 = re.findall(r'(?:'+dnaStrand8+')+', memTestFile)
-    if countStrand8:
-        maxSequence = max(countStrand8, key=len)
-        countStrand8 = (len(maxSequence)//len(dnaStrand8))
-
-    for row in dnaDB:
-        if countStrand1 == int(row[dnaStrand1]) and countStrand2 == int(row[dnaStrand2]) and countStrand3 == int(row[dnaStrand3]) and countStrand4 == int(row[dnaStrand4]) and countStrand5 == int(row[dnaStrand5]) and countStrand6 == int(row[dnaStrand6]) and countStrand7 == int(row[dnaStrand7]) and countStrand8 == int(row[dnaStrand8]):
-            print(row['name'])
-            exit(1)
-
-    print("No match.")
-
-
-main()
+print("No match.")
+dbFile.close()
