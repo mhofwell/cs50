@@ -2,11 +2,15 @@ from sys import argv, exit
 import csv
 import re
 
+# ensure proper input format from command line
+
 
 def sanitize(argv):
     if len(argv) != 3:
         print("Missing command-line argument")
         exit(1)
+
+# initialize the dnaDB dict using the dictionary file identified in input
 
 
 def initDict(argv, dbFile, tmp):
@@ -17,7 +21,7 @@ def initDict(argv, dbFile, tmp):
     tmp = csv.DictReader(dbFile)
     return tmp
 
-# open and read the contents of the testfile to memory
+# read the DNA sequence to test into memory (buffer)
 
 
 def initFile(tmp, argv):
@@ -29,6 +33,8 @@ def initFile(tmp, argv):
     testFileName.close()
     return tmp
 
+# from the dnaDB, retrieve the names of all DNA strands we want to test the new sequence against
+
 
 def getDnaNames(dnaNameList, dnaDB):
     i = 1
@@ -37,7 +43,7 @@ def getDnaNames(dnaNameList, dnaDB):
         dnaNameList.append(dnaDB.fieldnames[i])
         i += 1
 
-# iterate through the sample DNA with each fieldname
+# find the maximum number of sequences of the DNA strands that exist in the new sequence and add to a list
 
 
 def getSequences(dnaNameList, results, testFile):
@@ -54,6 +60,9 @@ def getSequences(dnaNameList, results, testFile):
             print('No match.')
             exit(2)
 
+# search the dnaDB for a match between the list of sequences and entries in the dict.
+# print the name of a match, if one exists
+
 
 def findMatch(dnaDB, dnaNameList, results):
     fields = len(dnaDB.fieldnames) - 1
@@ -68,6 +77,8 @@ def findMatch(dnaDB, dnaNameList, results):
                 exit(0)
 
     print("No match.")
+
+# close the DictReader
 
 
 def closeFile(dbFile):
