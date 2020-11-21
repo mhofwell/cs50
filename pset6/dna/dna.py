@@ -20,22 +20,23 @@ testFile = None
 
 def main():
 
-    # ensure proper input format
+    # ensure proper input format from command line
     sanitize(argv)
 
-    # get dict filename and initialize it
+    # initialize the dnaDB dict using the dictionary file identified in input
     dnaDB = initDict(argv, dbFile, tmp)
 
-    # prepare the testfile and read it to memory
+    # read the DNA sequence to test into memory (buffer)
     testFile = initFile(tmp, argv)
 
-    # get names of the DNA to test
+    # from the dnaDB, retrieve the names of all DNA strands we want to test the new sequence against
     getDnaNames(dnaNameList, dnaDB)
 
-    # iterate through the sample DNA with each fieldname
+    # find the maximum number of sequences of the DNA strands that exist in the new sequence and add to a list
     getSequences(dnaNameList, results, testFile)
 
-    # search the dnaDB for a match between results list and entries in the dict.
+    # search the dnaDB for a match between the list of sequences and entries in the dict.
+    # print the name of a match, if one exists
     findMatch(dnaDB, dnaNameList, results)
 
     # close the DictReader
