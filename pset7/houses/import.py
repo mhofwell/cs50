@@ -41,3 +41,4 @@ for row in studentList:
     cursor.execute(query, vars)
 
     db.commit()
+    

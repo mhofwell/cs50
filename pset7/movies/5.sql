@@ -1,0 +1,1 @@
+select title, year from movies where lower(title) LIKE "harry potter%";
