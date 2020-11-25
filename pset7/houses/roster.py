@@ -11,15 +11,23 @@ import sqlite3
 if len(argv) != 2:
     print("Proper usage: python <script name> <csv name>")
     exit(1)
-print(argv[0])
+
 # query database for all students in house
 db = sqlite3.connect("students.db")
 cursor = db.cursor()
+
 house = argv[1]
-query = "SELECT * FROM students WHERE "
-cursor.execute("select * from students;")
+result = cursor.execute("SELECT * FROM students WHERE house=?", (house,))
 
 rows = cursor.fetchall()
 
 for row in rows:
-    print(str(row[0]))
+    firstName = row[1]
+    middleName = row[2]
+    lastName = row[3]
+    house = row[4]
+    birth = row[5]
+    if middleName == None:
+        print(f"{firstName} {lastName} {house} born, {birth}")
+    else:
+        print(f"{firstName} {middleName} {lastName} {house} born, {birth}")
